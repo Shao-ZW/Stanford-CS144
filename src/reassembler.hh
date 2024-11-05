@@ -2,11 +2,16 @@
 
 #include "byte_stream.hh"
 
+#include <list>
+#include <tuple>
+
 class Reassembler
 {
 public:
   // Construct Reassembler to write into given ByteStream.
-  explicit Reassembler( ByteStream&& output ) : output_( std::move( output ) ) {}
+  explicit Reassembler( ByteStream&& output )
+    : output_( std::move( output ) ), finish_index_( -1 ), unassembled_index_( 0 ), pending_bytes_( 0 )
+  {}
 
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -42,4 +47,8 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
+  std::list<std::tuple<uint64_t, uint64_t, std::string>> buf_;
+  uint64_t finish_index_;
+  uint64_t unassembled_index_;
+  uint64_t pending_bytes_;
 };
