@@ -64,10 +64,10 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     pending_bytes_ -= std::get<2>( *buf_.begin() ).size();
     output_.writer().push( std::move( std::get<2>( *buf_.begin() ) ) );
     buf_.pop_front();
+  }
 
-    if ( unassembled_index_ >= finish_index_ ) {
-      output_.writer().close();
-    }
+  if ( unassembled_index_ >= finish_index_ ) {
+    output_.writer().close();
   }
 }
 

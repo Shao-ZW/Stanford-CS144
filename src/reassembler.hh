@@ -9,9 +9,7 @@ class Reassembler
 {
 public:
   // Construct Reassembler to write into given ByteStream.
-  explicit Reassembler( ByteStream&& output )
-    : output_( std::move( output ) ), finish_index_( -1 ), unassembled_index_( 0 ), pending_bytes_( 0 )
-  {}
+  explicit Reassembler( ByteStream&& output ) : output_( std::move( output ) ) {}
 
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -48,7 +46,7 @@ public:
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
   std::list<std::tuple<uint64_t, uint64_t, std::string>> buf_;
-  uint64_t finish_index_;
-  uint64_t unassembled_index_;
-  uint64_t pending_bytes_;
+  uint64_t finish_index_ { static_cast<uint64_t>( -1 ) };
+  uint64_t unassembled_index_ {};
+  uint64_t pending_bytes_ {};
 };
