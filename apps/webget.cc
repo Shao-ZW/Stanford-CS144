@@ -1,5 +1,6 @@
 #include "address.hh"
 #include "socket.hh"
+#include "tcp_minnow_socket.hh"
 
 #include <cstdlib>
 #include <iostream>
@@ -10,7 +11,8 @@ using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
-  TCPSocket tcp_socket;
+  // TCPSocket tcp_socket;
+  CS144TCPSocket tcp_socket;
   tcp_socket.connect( Address { host, "http" } );
   std::vector<std::string> request
     = { "GET " + path + " HTTP/1.1\r\n", "HOST: " + host + "\r\n", "Connection: close\r\n", "\r\n" };
