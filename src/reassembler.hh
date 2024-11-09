@@ -45,7 +45,7 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
-  std::list<std::tuple<uint64_t, uint64_t, std::string>> buf_;
+  std::list<std::tuple<uint64_t, uint64_t, std::string>> buf_ {};
   uint64_t finish_index_ { static_cast<uint64_t>( -1 ) };
   uint64_t unassembled_index_ {};
   uint64_t pending_bytes_ {};

@@ -11,12 +11,21 @@
 #include <optional>
 #include <queue>
 
+enum class Status
+{
+  CLOSED,
+  SYNSENT,
+  ESTABLISHED,
+  FINSENT,
+  FINISHED,
+};
+
 class TCPSender
 {
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
   TCPSender( ByteStream&& input, Wrap32 isn, uint64_t initial_RTO_ms )
-    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms )
+    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms ), rto_( initial_RTO_ms )
   {}
 
   /* Generate an empty TCPSenderMessage */
@@ -48,4 +57,13 @@ private:
   ByteStream input_;
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
+  uint64_t rto_;
+
+  Status status_ { Status::CLOSED };
+  uint64_t ackno_ {};
+  uint64_t seqno_ {};
+  uint16_t window_size_ { 2 }; // space for SYN + FIN
+  uint64_t retransmission_timer_ {};
+  uint64_t retransmission_cnts_ {};
+  std::deque<uint64_t> outstanding_ {};
 };

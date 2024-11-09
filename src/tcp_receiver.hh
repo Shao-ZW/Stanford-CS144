@@ -27,5 +27,6 @@ public:
 
 private:
   Reassembler reassembler_;
-  std::optional<Wrap32> ISN_ {};
+  bool is_connected_ {};
+  Wrap32 isn_ { 0 };
 };
