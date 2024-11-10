@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <queue>
 
 #include "address.hh"
@@ -37,6 +38,9 @@ public:
     virtual void transmit( const NetworkInterface& sender, const EthernetFrame& frame ) = 0;
     virtual ~OutputPort() = default;
   };
+
+  static constexpr size_t ARPINTERVAL = 5 * 1000;
+  static constexpr size_t LIVETIME = 30 * 1000;
 
   // Construct a network interface with given Ethernet (network-access-layer) and IP (internet-layer)
   // addresses
@@ -81,4 +85,13 @@ private:
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_ {};
+
+  // Datagrams that wait sent
+  std::queue<std::pair<InternetDatagram, uint32_t>> datagrams_wait_sent_ {};
+
+  // time since last ARP
+  std::optional<size_t> arp_time_ {};
+
+  // map from IP address to (Ethernet address, live time)
+  std::unordered_map<uint32_t, std::pair<EthernetAddress, size_t>> ip_ether_map_ {};
 };
