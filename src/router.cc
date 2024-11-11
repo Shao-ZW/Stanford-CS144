@@ -33,7 +33,7 @@ void Router::route()
 {
   for ( auto _interface : _interfaces ) {
     auto& received_datagrams = _interface->datagrams_received();
-    
+
     while ( received_datagrams.size() ) {
       InternetDatagram datagram { std::move( received_datagrams.front() ) };
       received_datagrams.pop();
