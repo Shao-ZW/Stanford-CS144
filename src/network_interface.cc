@@ -61,6 +61,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
     transmit( make_frame(
       ethernet_address_, ip_ether_map_[target_ip_address].first, EthernetHeader::TYPE_IPv4, serialize( dgram ) ) );
   } else { // If the destination Ethernet address is unknown, broadcast an ARP request
+    datagrams_wait_sent_.push( std::make_pair( dgram, target_ip_address ) );
     if ( arp_time_.value_or( ARPINTERVAL ) >= ARPINTERVAL ) {
       transmit( make_frame(
         ethernet_address_,
@@ -70,7 +71,6 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
           ARPMessage::OPCODE_REQUEST, ethernet_address_, ip_address_.ipv4_numeric(), {}, target_ip_address ) ) ) );
       arp_time_ = 0;
     }
-    datagrams_wait_sent_.push( std::make_pair( dgram, target_ip_address ) );
   }
 }
 
